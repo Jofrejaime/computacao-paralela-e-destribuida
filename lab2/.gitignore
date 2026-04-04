@@ -1,0 +1,14 @@
+# Build artifacts
+*.o
+*.obj
+*.out
+*.exe
+
+# Local binaries produced in this lab
+omp1
+omp2
+a.out
+
+# Temporary files
+*.tmp
+*.temp

@@ -288,3 +288,182 @@ gcc omp2.c -o omp2
 * Esta dependência será responsável por erros na versão paralela
 
 ---
+
+
+# 🔹 Problema 2 — b)
+
+## ⚙️ Implementação
+
+Foi criada uma versão paralela simples (e incorreta) do algoritmo, adicionando a diretiva OpenMP ao loop interno:
+
+```c
+for(iter = 0; iter < NUMITER; iter++) {
+
+    #pragma omp parallel for
+    for(i = 0; i < TOTALSIZE-1; i++) {
+        V[i] = f(V[i], V[i+1]);
+    }
+
+}
+```
+
+---
+
+## ▶️ Compilação e Execução
+
+```bash
+gcc omp2.c -fopenmp -o omp2
+export OMP_NUM_THREADS=4
+./omp2
+```
+
+---
+
+## 📊 Observação dos Resultados
+
+* A saída obtida difere da versão serial
+* O resultado pode variar entre execuções
+* O comportamento observado é não determinístico
+
+---
+
+## 🧠 Análise
+
+O problema reside na existência de **dependências de dados entre iterações consecutivas** do loop.
+
+Cada elemento é atualizado com base no seguinte:
+
+```c
+V[i] = f(V[i], V[i+1])
+```
+
+Assim, o valor de `V[i]` depende diretamente de `V[i+1]`.
+
+Na versão paralela:
+
+* Múltiplas threads executam iterações simultaneamente
+* Uma thread pode atualizar `V[i+1]` enquanto outra ainda precisa do valor antigo
+* Não existe sincronização que garanta a ordem correta de acesso aos dados
+
+---
+
+## ⚠️ Problema Identificado
+
+O comportamento incorreto deve-se a uma **condição de corrida (race condition)**:
+
+* Leituras e escritas concorrentes no vetor `V`
+* Ordem de execução imprevisível entre threads
+* Uso de valores inconsistentes durante o cálculo
+
+---
+
+## 🔄 Consequências
+
+* Resultados incorretos
+* Diferenças em relação à versão serial
+* Resultados variáveis entre execuções
+
+---
+
+## ✅ Conclusão
+
+A paralelização direta do loop interno não é válida, devido à presença de dependências de dados entre iterações. É necessário utilizar uma abordagem alternativa que elimine essas dependências para garantir a correção do algoritmo.
+
+---
+# 🔹 Problema 2 — c)
+
+## ⚙️ Implementação
+
+Para corrigir a versão paralela, foi utilizado um vetor auxiliar (`V_old`) para armazenar os valores da iteração anterior.
+
+Antes de cada iteração, os valores do vetor principal são copiados:
+
+```c
+for(i = 0; i < TOTALSIZE; i++) {
+    V_old[i] = V[i];
+}
+```
+
+Em seguida, o cálculo é realizado utilizando apenas os valores copiados:
+
+```c
+#pragma omp parallel for
+for(i = 0; i < TOTALSIZE-1; i++) {
+    V[i] = f(V_old[i], V_old[i+1]);
+}
+```
+
+---
+
+## 🧠 Análise
+
+* O vetor `V_old` garante que todas as threads leem dados consistentes
+* Não há escrita concorrente sobre os mesmos dados utilizados para leitura
+* As dependências de dados são eliminadas
+
+---
+
+## ✅ Resultados
+
+* A saída é idêntica à versão serial
+* O comportamento é determinístico
+* A execução paralela torna-se correta
+
+---
+
+## 🏁 Conclusão
+
+A utilização de um vetor auxiliar elimina as condições de corrida, permitindo a paralelização correta do algoritmo mesmo na presença de dependências de dados entre iterações.
+
+---
+# 🔹 Problema 2 — d)
+
+## ⚙️ Implementação
+
+Para evitar a cópia do vetor a cada iteração, foi utilizada a técnica de **double buffering**, com dois vetores auxiliares (`V1` e `V2`).
+
+Em cada iteração:
+
+* Um vetor é utilizado para leitura (`read`)
+* O outro é utilizado para escrita (`write`)
+* No final da iteração, os ponteiros são trocados
+
+```c
+double *temp = read;
+read = write;
+write = temp;
+```
+
+O cálculo paralelo é feito da seguinte forma:
+
+```c
+#pragma omp parallel for
+for(i = 0; i < TOTALSIZE-1; i++) {
+    write[i] = f(read[i], read[i+1]);
+}
+```
+
+---
+
+## 🧠 Análise
+
+* Cada iteração utiliza apenas dados da iteração anterior
+* Não há necessidade de copiar o vetor completo
+* A troca de ponteiros é uma operação eficiente (O(1))
+* As dependências de dados são eliminadas
+
+---
+
+## ✅ Resultados
+
+* A saída permanece correta e idêntica à versão serial
+* O comportamento é determinístico
+* A execução é mais eficiente comparada à solução anterior
+
+---
+
+## 🏁 Conclusão
+
+A utilização de double buffering permite evitar a cópia do vetor a cada iteração, mantendo a correção e melhorando a eficiência do algoritmo paralelo.
+
+---
