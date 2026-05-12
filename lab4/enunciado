@@ -1,0 +1,13 @@
+Preliminares 
+1. Comece por criar o programa discutido na aula 
+O Processo <id> envia cumprimentos a partir da máquina <node-id>! 
+2. Faça o download do ficheiro sendReceive.c 
+a. Examinar o código para determinar sua funcionalidade. 
+b. Compilar e executar este programa, usando valores diferentes para o 
+parâmetro de entrada. 
+c. Interpretar os resultados obtidos. 
+3. Modificar o programa sendReceive.c para obter experimentalmente a latência 
+da mensagem e a largura de banda para a rede. 
+4. Escrever um programa que permita a comparação de desempenho entre o 
+broadcast de um grande array para todos os nós, e o envio do array por meio 
+de mensagens enviadas individualmente para cada nó. 

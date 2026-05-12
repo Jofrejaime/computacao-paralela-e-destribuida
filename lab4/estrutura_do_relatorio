@@ -1,0 +1,29 @@
+Memorando 
+De: nome do estudante 
+Nº de Matrícula: …. 
+Disciplina: …. 
+Assunto: …. 
+Data: … 
+1. Introdução  
+Descreva de forma resumida o contexto do trabalho, objectivos, restricções e observações 
+sobre aspectos importantes da experiência realizada. 
+2. Experiências Realizadas 
+Descreva, de forma sucinta e técnica, a sua experiência realizada.  
+Deve incluir captura de tela (de scripts criados, código fonte modificado, execução do 
+programa em seu computador, etc.) e explicação do seu entendimento sobre os exercícios 
+de laboratório (responder às questões). 
+O memorando visa apresentar o seu entendimento mediante experiência, deve ser sucinto e 
+técnico (explicar as configurações necessárias, scripts, processo de construção, build, e o 
+programa/execução). 
+Para código e scripts o tipo de letra letra courrier new, tamanho 8: 
+int getValue(int argc, char *argv[]); 
+As figuras (imagens capturadas ou otras), tabelas, etc devem ter legenda e ser numeradas. 
+3. Desafios 
+Deve ser dada uma panorâmica do que se concebeu, nomeadamente a estrutura do 
+software. 
+4. Referências Bibliográficas  
+Deve listar os sites, livros, artigos, etc… que consultou para realização da experiência ou 
+concepção e implementação do desafio. 
+5. Repositório GitHub  
+Coloque aqui o link do repositório e envie o convite de colaborador para o utilizador GitHub 
+joaojdacosta. 
